@@ -1,0 +1,16 @@
+import pandas as pd
+
+# Load the data
+free_form_responses = pd.read_csv('freeFormResponses.csv')
+multiple_choice_responses = pd.read_csv('multipleChoiceResponses.csv')
+survey_schema = pd.read_csv('SurveySchema.csv')
+
+# Data cleaning example
+# Normalize text responses
+multiple_choice_responses['Q1'] = multiple_choice_responses['Q1'].str.lower().str.strip()
+
+# Handle missing values
+multiple_choice_responses.fillna('Unknown', inplace=True)
+
+# Display the first few rows of the cleaned data
+print(multiple_choice_responses.head())
