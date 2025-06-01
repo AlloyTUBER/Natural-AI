@@ -3,11 +3,9 @@ import joblib
 import pandas as pd
 import re
 
-# Load model and vectorizer
 model = joblib.load('sentiment_model.pkl')
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
-# Clean text
 def clean_text(text):
     text = text.lower()
     text = re.sub(r"http\S+", "", text)
@@ -15,14 +13,12 @@ def clean_text(text):
     text = re.sub(r"\d+", "", text)
     return text.strip()
 
-# Predict sentiment
 def predict_sentiment(text):
     cleaned = clean_text(text)
     X = vectorizer.transform([cleaned])
     prediction = model.predict(X)[0]
     return prediction
 
-# Streamlit UI
 st.set_page_config(page_title="App Review Sentiment + Recommender", layout="centered")
 st.title("📱 App Review Sentiment Classifier + Recommender")
 
@@ -45,12 +41,10 @@ if st.button("Analyze & Recommend"):
             reviews_df = pd.concat([reviews_df, games_reviews], ignore_index=True)
             reviews_df.dropna(subset=['review_text', 'review_score'], inplace=True)
 
-            # Label sentiment
             reviews_df['sentiment'] = reviews_df['review_score'].apply(
                 lambda x: 'positive' if x >= 4 else 'neutral' if x == 3 else 'negative'
             )
 
-            # Recommend top-N positively reviewed apps/games
             positive_reviews = reviews_df[reviews_df['sentiment'] == 'positive']
             top_apps = positive_reviews['app_id'].value_counts().head(5).index.tolist()
 
